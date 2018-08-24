@@ -4,11 +4,9 @@ var request = require('request');
 var Spotify = require('node-spotify-api');
 var moment = require('moment');
 var fs = require('fs');
+var keys = require('./keys.js');
 
-var spotify = new Spotify({
-    id: '54c4c4a7f42f4eba83bc6f1564b9aa8d',
-    secret: 'ad11e0b2288c4cdeb08aa27d4ce524cc'
-  });
+var spotify = new Spotify(keys.spotify);
 
 //Taking in terminal inputs
 var argument = process.argv[2];
@@ -20,7 +18,6 @@ query = query.splice(3,(process.argv.length - 1)).join('+');
 switch (argument) {
     case 'concert-this':
         queryURL = 'https://rest.bandsintown.com/artists/' + query + '/events?app_id=codingbootcamp';
-        console.log(queryURL);
         request(queryURL, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 for(var i = 0; i < (JSON.parse(body)).length; i++) {
@@ -56,7 +53,6 @@ switch (argument) {
             query = "Mr.+Nobody";
         }
         queryURL = 'http://www.omdbapi.com/?t=' + query + '&y=&plot=short&apikey=trilogy';
-        console.log(queryURL);
         request(queryURL, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 console.log('Title: ' + JSON.parse(body).Title);
@@ -80,7 +76,6 @@ switch (argument) {
             return console.log(error);
             } else {
                 query = data.split(' ').join('+');
-                console.log(query);
                 spotify.search({ type: 'track', query: query })
                 .then(function(response) {
                     for(var i = 0; i < response.tracks.items.length; i++) {
